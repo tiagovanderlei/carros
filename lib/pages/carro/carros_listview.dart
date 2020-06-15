@@ -1,8 +1,9 @@
 import 'package:carros/pages/carro/carro_detalhe.dart';
-import 'package:carros/pages/carro/carros_bloc.dart';
+import 'package:carros/pages/carro/carros_model.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text_error.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'carro.dart';
 import 'carros_api.dart';
@@ -19,13 +20,17 @@ class CarrosListView extends StatefulWidget {
 class _CarrosListViewState extends State<CarrosListView>
     with AutomaticKeepAliveClientMixin<CarrosListView> {
   List<Carro> carros;
-  final _bloc = CarrosBloc();
+  final _model = CarrosModel();
 
   TiposCarro get tipo => this.widget.tipo;
 
   @override
   void initState() {
-    _bloc.fetch(tipo);
+    fetch();
+  }
+
+  void fetch(){
+    _model.fetch(tipo);
   }
 
   @override
@@ -38,22 +43,21 @@ class _CarrosListViewState extends State<CarrosListView>
 
     print('>> ListView');
 
-    return StreamBuilder<List<Carro>>(
-      stream: _bloc.stream,
-      builder: (BuildContext context, AsyncSnapshot<List<Carro>> snapshot) {
-        if (snapshot.hasError) {
+    return Observer(
+      builder: (BuildContext context) {
+        if (_model.error != null) {
           return TextError(
-            msg: 'Não foi possível buscar os carros',
+            msg: 'Não foi possível buscar os carros\n\nClique aqui para recarregar!', acao: fetch,
           );
         }
 
-        if (!snapshot.hasData) {
+        if (_model.carros == null) {
           return Center(
             child: CircularProgressIndicator(),
           );
         }
 
-        List<Carro> carros = snapshot.data;
+        List<Carro> carros = _model.carros;
         return _listView(carros);
       },
     );
@@ -120,11 +124,5 @@ class _CarrosListViewState extends State<CarrosListView>
             );
           }),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _bloc.dispose();
   }
 }
