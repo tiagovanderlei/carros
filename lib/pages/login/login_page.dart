@@ -78,7 +78,8 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validateSenha,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
-                focusNode: _focusSenha),
+                focusNode: _focusSenha
+            ),
             SizedBox(height: 20),
             StreamBuilder<bool>(
               stream: _bloc.stream,

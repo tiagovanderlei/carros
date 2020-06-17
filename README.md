@@ -1,10 +1,13 @@
-# carros
+# Projeto de Carros
 
-A new Flutter application.
+Projeto criado, para acompanhamento do curso "Flutter Essencial":
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+O curso pode ser acessado no endereço:
+
+- [https://www.udemy.com/course/flutter-essencial/]
+
 
 A few resources to get you started if this is your first Flutter project:
 
